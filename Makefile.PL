@@ -11,6 +11,7 @@ my %args = (
       'File::Find' => 0,
       'File::Copy' => 0,
       'Inline' => 0,
+      'Inline::C' => 0,
     },
     LIBS => [],
     DEFINE => '',
