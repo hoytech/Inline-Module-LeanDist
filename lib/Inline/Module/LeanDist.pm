@@ -71,9 +71,49 @@ B<NOTE>: The C<postamble.inline.file> parameter should be the filename of your m
 
 =head1 DESCRIPTION
 
+This module is heavily inspired by L<Inline::Module>. I wrote it because I wanted to be able to use Inline during development, but ship distributions that have no dependencies on L<Inline> or any other module (for example L<Inline::Filters> and its plugins). I wanted to ship distributions that were (from the user's perspective) identical to XS dists I would have created by hand (without L<Inline>).
+
+Essentially, L<Inline> compiles your code at run-time meaning all compilation dependencies are required at run-time. L<Inline::Module> pushes the compilation dependency requirements back to distribution build time. However, L<Inline::Module::LeanDist> goes one step futher and pushes back the compilation dependencies to distribution I<creation> time (except for a regular XS tool-chain).
+
+The advantage of the L<Inline::Module> approach is that start-up time is faster for your modules since the fairly heavy-weight L<Inline> system isn't loaded, and a compiled version is always available no matter what the state of your C<.inline> directory is (or which user is running the program or file-system permissions, etc).
+
+L<Inline::Module::LeanDist> has all the advantages of L<Inline::Module> as well as some additional ones: Downloading and installing L<Inline> is not necessary to build the distribution. This also goes for any other dependencies (such as the C<ragel> binary required by L<Inline::Filters::Ragel>). Also, you don't need to worry about updates to L<Inline>/L<Inline::Module>/etc breaking your distribution (though note that L<Inline::Module> recommends bundling the multi-hundreds of KB Inline tool-chain with every distribution to avoid this). Finally, with L<Inline::Module::LeanDist> you don't need to mess around with awkward "stub" packages.
+
+However, L<Inline::Module> will likely work for more ILSMs. This module has only been tested with L<Inline::C> so far. Also, although it's a bit subjective, in my opinion L<Inline::Module> is slightly nicer to develop with since it always puts the L<.so> files into C<blib/> which is more "normal" than the C<.inline> directory. 
+
+
+=head1 HOW DOES IT WORK?
+
+Basically it's all a huge hack. :)
+
+During development time, the L<Inline::Module::LeanDist> forwards all its parameters to L<Inline> so you develop with normal L<Inline> practices.
+
+However, L<Inline::Module::LeanDist::MakefilePL> modifies C<Makefile.PL> so that at C<make dist> time, it will comment out the C<use Inline::Module::LeanDist::MakefilePL;> line in C<Makefile.PL> as well as comment out the C<use Inline::Module::LeanDist ...> line in your module and replace it with an L<XSLoader> invocation. It also will copy the generated C<.xs> file from the C<.inline> directory into the distribution and add this to the C<OBJECT> parameter in C<Makefile.PL> (as well as the dist's C<MANIFEST>).
+
+The consequence of all this hacking is that the created distributions are lean XS-only distributions.
+
+
+=head1 EXAMLES
+
+L<Acme::Math::XS::LeanDist> - This is a very simple example in the style of L<Acme::Math::XS> etc.
+
+L<Unicode::Truncate> - This is an actually useful module that doubles as a proof of concept for L<Inline::Module::LeanDist> as well as L<Inline::Filters::Ragel>.
+
+
+=head1 BUGS
+
+It really ought to be possible to have multiple separate files in a single dist that use L<Inline>, but this is not yet supported.
+
+It should support C<Build.PL> in addition to C<Makefile.PL>.
+
+It shoud be possible to do something like this with C++.
+
+
 =head1 SEE ALSO
 
 L<Inline-Module-LeanDist github repo|https://github.com/hoytech/Inline-Module-LeanDist>
+
+L<Inline::Module>
 
 =head1 AUTHOR
 
