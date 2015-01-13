@@ -71,15 +71,15 @@ B<NOTE>: The C<postamble.inline.file> parameter should be the filename of your m
 
 =head1 DESCRIPTION
 
-This module is heavily inspired by L<Inline::Module>. I wrote it because I wanted to be able to use Inline during development, but ship distributions that have no dependencies on L<Inline> or any other module (for example L<Inline::Filters> and its plugins). I wanted to ship distributions that were (from the user's perspective) identical to XS dists I would have created by hand (without L<Inline>).
+This module is heavily inspired by L<Inline::Module>. I wrote it because I wanted to be able to use L<Inline> during development, but ship distributions that have no dependencies on it or any other module (for example L<Inline::Filters> and its plugins). I wanted to ship distributions that were (from the user's perspective) identical to XS dists I would have created by hand (without L<Inline>).
 
-Essentially, L<Inline> compiles your code at run-time meaning all compilation dependencies are required then. L<Inline::Module> pushes the compilation dependency requirements back to distribution build time. However, L<Inline::Module::LeanDist> goes one step futher and pushes back the compilation dependencies to distribution I<creation> time (except for a regular XS tool-chain).
+Essentially, L<Inline> compiles your code as lazily as possible which means all compilation dependencies are required at run-time. L<Inline::Module> pushes the compilation dependencies back to build time. However, L<Inline::Module::LeanDist> goes one step futher and pushes back the compilation dependencies to distribution creation time.
 
-The advantage of the L<Inline::Module> approach over L<Inline> is that start-up time is faster for your modules since the fairly heavy-weight L<Inline> system isn't loaded, and a compiled version is always available no matter what the state of your C<.inline> directory is (or which user is running the program or file-system permissions, etc).
+The advantage of the L<Inline::Module> approach over L<Inline> is that start-up time is faster for your modules since the fairly heavy-weight L<Inline> system isn't loaded, and a compiled version of your module is always available no matter the state of the current C<.inline> directory (or which user is running the program, file-system permissions, etc).
 
-L<Inline::Module::LeanDist> has all of these advantages as well as some additional ones: Downloading and installing L<Inline> is not necessary to build the distribution. This also goes for any other dependencies (such as the C<ragel> binary required by L<Inline::Filters::Ragel>). Also, you don't need to worry about updates to L<Inline>/L<Inline::Module>/etc breaking your distribution (though note that L<Inline::Module> recommends avoiding this by bundling the multi-hundreds of KB L<Inline> tool-chain with every distribution). Finally, with L<Inline::Module::LeanDist> you don't need to mess around with awkward "stub" packages.
+L<Inline::Module::LeanDist> has all of these advantages as well as some additional ones: Downloading and installing L<Inline> is not necessary to build the distribution. This also goes for any other dependencies (such as the C<ragel> binary required by L<Inline::Filters::Ragel>). Also, you don't need to worry about updates to L<Inline>/L<Inline::Module>/etc breaking your distribution (though note that L<Inline::Module> recommends avoiding this by bundling the multi-hundreds of KB L<Inline> tool-chain with every distribution). Finally, with L<Inline::Module::LeanDist> you don't need to mess around with L<Inline::Module>'s awkward "stub" packages.
 
-However, L<Inline::Module> will likely work for more ILSMs. This module has only been tested with L<Inline::C> so far. Also, although it's a bit subjective, in my opinion L<Inline::Module> is slightly nicer to develop with since it always puts the L<.so> files into C<blib/> which is more "normal" than the C<.inline> directory (and of course C<make> actually compiles your code). 
+However, L<Inline::Module> will likely work for more ILSMs. This module has only been tested with L<Inline::C> so far. Also, although it's a bit subjective, in my opinion L<Inline::Module> is slightly nicer to develop with over L<Inline> since it always puts the C<.so> files into C<blib/> which is more "normal" than the C<.inline> directory (and of course it's nice that running C<make> actually, you know, compiles your code). 
 
 
 =head1 HOW DOES IT WORK?
@@ -106,7 +106,7 @@ It really ought to be possible to have multiple separate files in a single dist 
 
 It should support C<Build.PL> in addition to C<Makefile.PL>.
 
-It shoud be possible to do something like this with C++.
+It should support other ILSMs (C++ at least).
 
 
 =head1 SEE ALSO
