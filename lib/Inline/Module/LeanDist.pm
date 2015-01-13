@@ -77,9 +77,13 @@ Essentially, L<Inline> compiles your code as lazily as possible which means all 
 
 The advantage of the L<Inline::Module> approach over L<Inline> is that start-up time is faster for your modules since the fairly heavy-weight L<Inline> system isn't loaded, and a compiled version of your module is always available no matter the state of the current C<.inline> directory (or which user is running the program, file-system permissions, etc).
 
-L<Inline::Module::LeanDist> has all of these advantages as well as some additional ones: Downloading and installing L<Inline> is not necessary to build the distribution. This also goes for any other dependencies (such as the C<ragel> binary required by L<Inline::Filters::Ragel>). Also, you don't need to worry about updates to L<Inline>/L<Inline::Module>/etc breaking your distribution (though note that L<Inline::Module> recommends avoiding this by bundling hundreds of KB of L<Inline> and its dependencies. With every distribution.). Finally, with L<Inline::Module::LeanDist> you don't need to mess around with L<Inline::Module>'s awkward "stub" packages.
+L<Inline::Module::LeanDist> has all of these advantages as well as some additional ones: Downloading and installing L<Inline> is not necessary to build the distribution. This also goes for any other dependencies (such as the C<ragel> binary required by L<Inline::Filters::Ragel>).
 
-However, L<Inline::Module> will likely work for more ILSMs. This module has only been tested with L<Inline::C> so far. Also, although it's a bit subjective, in my opinion L<Inline::Module> is slightly nicer to develop with over L<Inline> since it always puts the C<.so> files into C<blib/> which is more "normal" than the C<.inline> directory (and of course it's nice that running C<make> actually, you know, compiles your code). 
+With L<Inline::Module::LeanDist> you don't need to worry about updates to L<Inline>/L<Inline::Module>/etc breaking your distribution, not that there is any more reason to expect C<Inline::*> to break than say C<MakeMaker> or C<Test::*>. L<Inline::Module> recommends avoiding back-compat problems by bundling hundreds of KB of L<Inline> and its dependencies along with every distribution. I recommend against that. Fortunately there is a CC<< bundle => 0 >> option in L<Inline::Module> to stop the bundling. Just add the required modules to your distribution's build-time pre-requisites.
+
+Finally, with L<Inline::Module::LeanDist> you don't need to mess around with L<Inline::Module>'s awkward "stub" packages.
+
+On the other hand, L<Inline::Module> will likely work for more ILSMs: this module module has only been tested with L<Inline::C> so far. Also, although it's a bit subjective, in my opinion L<Inline::Module> is nicer to develop with over L<Inline> since it always puts the C<.so> files into C<blib/> which is more "normal" than the C<.inline> directory (and of course it's nice that running C<make> actually, you know, compiles your code). 
 
 
 =head1 HOW DOES IT WORK?
