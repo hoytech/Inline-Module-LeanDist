@@ -4,7 +4,7 @@ use strict;
 
 use File::Path;
 
-our $VERSION = '0.100';
+our $VERSION = '0.101';
 
 our $inline_build_path = '.inline';
 
