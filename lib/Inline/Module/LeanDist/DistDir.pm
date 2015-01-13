@@ -8,7 +8,7 @@ use File::Copy;
 require Inline::Module::LeanDist;
 
 
-## Inline::C makes this kind of hard to get access to this, so just copy/paste it in here for now (I know, I know, ick...)
+## Inline::C makes it kind of hard to get access to this, so just copy/paste it in here for now (I know, I know, ick...)
 
 our $inline_h_file = <<'END_OF_INLINE_H';
 #define Inline_Stack_Vars dXSARGS
